@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'feature/counter/presentation/counter_screen.dart';
-import 'feature/counter/presentation/cubit/counter_cubit.dart';
+import 'feature/github-project/presentation/search_bloc/search_bloc.dart';
+import 'feature/github-project/presentation/views/base_screen.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -13,8 +15,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CounterCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SearchBloc>(
+          create: (BuildContext context) => SearchBloc(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -23,7 +29,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: const CounterScreen(title: 'GitFlutter Search'),
+        home: const BaseScreen(title: 'GitSearch'),
       ),
     );
   }
